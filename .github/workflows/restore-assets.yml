@@ -1,0 +1,33 @@
+name: Restore verified public assets
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - scripts/restore-public-assets.py
+      - .github/workflows/restore-assets.yml
+permissions:
+  contents: write
+concurrency:
+  group: restore-public-assets
+  cancel-in-progress: false
+jobs:
+  restore:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download and verify original public assets
+        run: python3 scripts/restore-public-assets.py
+      - name: Run all seven application checks
+        run: |
+          for test in tests/*.cjs; do node "$test"; done
+      - name: Commit verified assets to the existing repository
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add docs/model/weights.bin docs/vendor/tf.min.js
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add verified original AI runtime and model weights'
+            git push origin HEAD:main
+          fi
