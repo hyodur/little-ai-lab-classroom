@@ -5,7 +5,8 @@ const Export=require('../docs/export-html.js');
 function build(){
  const project={title:'완성 앱 실행하기',revision:0,trainedRevision:0,model:{},classes:[{name:'',photos:[]},{name:'',photos:[]}],blocks:[{type:'photo'},{type:'predict'},{type:'if',classIndex:0,icon:'',message:'안내'},{type:'if',classIndex:1,icon:'',message:'안내'}]};
  let html=Export.build(project,{base:{},tf:'',engine:'',camera:'',player:'',license:fs.readFileSync(path.join(__dirname,'../docs/vendor/LICENSE-Apache-2.0.txt'),'utf8')});
- html=html.replace('<html lang="ko">','<html lang="ko" data-web-player="true">')
+ html=html.replace('<html lang="ko">','<html lang="ko" data-web-player="true" translate="no">')
+  .replace('<head>','<head><meta name="google" content="notranslate">')
   .replace("script-src 'unsafe-inline' 'unsafe-eval'","script-src 'self' 'unsafe-eval'")
   .replace(/<script\b[^>]*>[\s\S]*?<\/script>/g,'')
   .replace('<main>','<main id="player-main" hidden>')
