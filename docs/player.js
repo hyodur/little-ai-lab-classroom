@@ -5,7 +5,7 @@ const $=s=>document.querySelector(s), packet=JSON.parse($('#app-data').textConte
 let engine=null,head=null,loading=null,photo=null,working=false;
 const status=s=>{$('#status').textContent=s;};
 const clear=()=>{$('#answer').hidden=true;$('#class-name').textContent='';$('#message').textContent='';$('#icon').textContent='';};
-const lock=on=>{working=on;$('#start').disabled=on||!photo;$('#choose').disabled=on;};
+const lock=on=>{working=on;$('#start').disabled=on||!photo;$('#choose').disabled=on;$('#camera-open').disabled=on;$('#native-open').disabled=on;};
 function decode(s){const raw=atob(s),bytes=new Uint8Array(raw.length);for(let i=0;i<raw.length;i++)bytes[i]=raw.charCodeAt(i);return bytes.buffer;}
 function source(m){return tf.io.fromMemory({modelTopology:m.topology,weightSpecs:m.specs,weightData:decode(m.data)});}
 async function models(){
@@ -32,6 +32,30 @@ async function smallPhoto(file){
 function accept(src){photo=src;$('#preview').src=src;$('#preview').hidden=false;$('#placeholder').hidden=true;clear();$('#start').disabled=false;status('사진을 골랐어요. 시작을 눌러 주세요.');}
 $('#choose').onclick=()=>{if(!working)$('#photo').click();};
 $('#photo').onchange=async e=>{const file=e.target.files[0];e.target.value='';if(!file||working)return;lock(true);clear();status('사진을 준비하고 있어요…');try{accept(await smallPhoto(file));}catch(e){status(e.message||'사진을 열지 못했어요. JPG나 PNG 사진을 골라 주세요.');}finally{lock(false);}};
+$('#native-photo').onchange=$('#photo').onchange;
+$('#native-open').onclick=()=>{if(!working)$('#native-photo').click();};
+const camera=new InlineCamera($('#camera-video')),dialog=$('#camera-dialog');
+let cameraTurn=0;
+function closeCamera(){cameraTurn++;camera.stop();$('#camera-capture').disabled=true;if(dialog.open)dialog.close();}
+function cameraHelp(error){
+ if(error?.name==='NotAllowedError'||error?.name==='SecurityError')return '카메라를 열 수 없어요. 브라우저의 카메라 권한을 확인하거나, 아래 ‘카메라 앱으로 찍기’를 눌러 주세요.';
+ if(error?.name==='NotFoundError')return '사용할 카메라를 찾지 못했어요. 사진을 골라 시험할 수 있어요.';
+ return '이 화면에서는 카메라를 열지 못했어요. 아래 ‘카메라 앱으로 찍기’를 눌러 보거나, Chrome·삼성 인터넷에서 파일을 다시 열어 주세요.';
+}
+$('#camera-open').onclick=async()=>{
+ if(working)return;
+ if(!navigator.mediaDevices?.getUserMedia||typeof dialog.showModal!=='function'){status(cameraHelp());$('#camera-fallback').hidden=false;return;}
+ const turn=++cameraTurn;lock(true);$('#camera-capture').disabled=true;$('#camera-status').textContent='카메라 사용을 허용하고, 화면이 보일 때까지 기다려 주세요.';
+ try{dialog.showModal();if(await camera.open()&&turn===cameraTurn&&dialog.open){$('#camera-capture').disabled=false;$('#camera-status').textContent='물건을 화면에 맞추고 ‘찍어서 사용’을 눌러요.';}}
+ catch(e){if(turn===cameraTurn){closeCamera();status(cameraHelp(e));$('#camera-fallback').hidden=false;}}
+ finally{if(!dialog.open)lock(false);}
+};
+$('#camera-capture').onclick=()=>{try{const src=camera.capture();closeCamera();accept(src);status('사진을 찍었어요. 시작을 눌러 주세요.');}catch(e){$('#camera-status').textContent=e.message||'화면이 보이면 다시 찍어 주세요.';}};
+$('#camera-close').onclick=closeCamera;
+dialog.oncancel=e=>{e.preventDefault();closeCamera();};
+dialog.onclose=()=>{if(dialog.open)return;cameraTurn++;camera.stop();lock(false);};
+document.addEventListener('visibilitychange',()=>{if(document.hidden)closeCamera();});
+window.addEventListener('pagehide',closeCamera);
 $('#start').onclick=async()=>{
  if(working||!photo)return;lock(true);clear();status('AI가 사진을 살펴봐요. 처음에는 잠시 기다려 주세요.');let x=null,out=null,im=null;
  try{

@@ -1,13 +1,13 @@
 {
   "files": {
     "style.css": "4a53929792bc5a2ff0d162265475dc829a772a7a1a5a1fc1d5f18a858e0e82d9",
-    "export-html.js": "bdb77b8fe56a25cea34aedb9bb02f1abaddbf0cd04e2efe85cfa584f208778f3",
+    "export-html.js": "e11ddac07444fb1f0ac16d841a74ee54a7612d84219fde3f9c798decb67b7ca6",
     "app.js": "b67b5e5db59da045916dd5c0aa2358d4413b89f6a453b23a8aa7bd7e02289bba",
     "engine.js": "69da5e937e6d1cbe754a4b0bdc3cbda3edebe720f254065c6c93c432e54473ef",
     "camera.js": "2fef92c1d10eeb35ce1adf939dbd7fd175fdd315d66712ed3e35fdd70d344aa3",
-    "player.js": "9e47c6b556b1d857c161090fed95dcf0ab0220ba8b2c863ad1a0ad680fbdec62",
+    "player.js": "5f2c342e4c319216f41287a9532d85ce12097f37b72e19afb8e02e2f165de807",
     "persistence.js": "445ac0f72baa5a484141c02cea25ccbc69ed9b2926956d76e1425b9cb4ade994",
-    "index.html": "ad72cfbc0ce19f4c898e821941568a3134e04ad29b410afb3c20506624d8d60d",
+    "index.html": "648bca2e6d9390d1b8bd160318a8227824ea27f4fa741a596deade6a4a57bedd",
     "model/weights.bin": "eb49857447f6089e7e392f7991f3f4fdce1936efaf83d535f5eb8aaba9538e0b",
     "model/model.json": "3611231bca9ff81c1d1dd7b8a5f3311829f0cb84af37e441ddb7482f8f2f0a23",
     "vendor/LICENSE-Apache-2.0.txt": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
