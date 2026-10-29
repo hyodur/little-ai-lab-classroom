@@ -8,13 +8,15 @@ function build(){
  html=html.replace('<html lang="ko">','<html lang="ko" data-web-player="true" translate="no">')
   .replace('<head>','<head><meta name="google" content="notranslate">')
   .replace("script-src 'unsafe-inline' 'unsafe-eval'","script-src 'self' 'unsafe-eval'")
+  .replace("connect-src 'none'", "connect-src 'self'")
   .replace(/<script\b[^>]*>[\s\S]*?<\/script>/g,'')
+  .replace('<p class="small">바로 사진 찍기를 누르면 웹 촬영 화면으로 이어져요. 처음에는 인터넷 연결과 카메라 허용이 필요해요.</p><p class="small"><a href="https://hyodur.github.io/little-ai-lab-classroom/play.html" target="_blank" rel="noopener">웹에서 완성 앱 열기 ↗</a></p>', '<p class="small">바로 찍거나 갤러리에서 고른 뒤, 시작을 눌러요.</p>')
   .replace('<main>','<main id="player-main" hidden>')
-  .replace('<body>','<body><main id="open-app-panel"><header><div class="eyebrow">꼬마 AI 개발 연구소 · v0.6.2</div><h1>완성 앱을 열어요</h1><p>친구가 만든 앱으로 바로 찍고 시험해요.</p></header><section class="card"><div class="symbol" aria-hidden="true">📂</div><h2>받아 둔 HTML 파일을 골라요</h2><p>카카오톡에서 받은 파일은 먼저 다운로드해 주세요.</p><button id="open-app">완성 앱 HTML 고르기</button><input id="app-file" type="file" accept=".html,.htm,text/html" hidden><p id="open-status" role="status" aria-live="polite">파일을 고르면 촬영과 시험 화면이 열려요.</p><p class="small">작품과 시험 사진은 이 기기에서만 읽어요. 서버에 업로드하지 않아요. 다시 학습할 필요도 없어요.</p></section><p class="small">카메라 사용 안내가 나오면 허용해 주세요.</p><p><a href="./">← 개발 연구소로</a></p></main>')
+  .replace('<body>','<body><main id="open-app-panel"><header><div class="eyebrow">꼬마 AI 개발 연구소 · v0.6.3</div><h1>완성 앱을 열어요</h1><p>친구가 만든 앱으로 바로 찍고 시험해요.</p></header><section class="card"><div class="symbol" aria-hidden="true">📂</div><h2>받아 둔 HTML 파일을 골라요</h2><p>카카오톡에서 받은 파일은 먼저 다운로드해 주세요.</p><button id="open-app">완성 앱 HTML 고르기</button><input id="app-file" type="file" accept=".html,.htm,text/html" hidden><p id="open-status" role="status" aria-live="polite">파일을 고르면 촬영과 시험 화면이 열려요.</p><p class="small">작품과 시험 사진은 이 기기에서만 읽어요. 서버에 업로드하지 않아요. 다시 학습할 필요도 없어요.</p></section><p class="small">카메라 사용 안내가 나오면 허용해 주세요.</p><p><a href="./">← 개발 연구소로</a></p></main>')
   .replace('<div id="camera-fallback" hidden>','<div id="camera-fallback" hidden><p class="small">주소창의 사이트 설정과 휴대폰 설정에서 이 브라우저의 카메라 권한을 확인해 주세요. 당장 촬영이 어렵다면 휴대폰 기본 카메라에서 따로 찍어 저장한 다음 ‘갤러리에서 고르기’를 이용해요.</p><div hidden>')
   .replace('<p id="status"','</div><p id="status"')
   .replace('</main><dialog','<p><a href="play.html">다른 완성 앱 열기</a> · <a href="./">개발 연구소로</a></p></main><dialog')
-  .replace('</body>','<script type="application/json" id="app-data"></script><script defer src="vendor/tf.min.js"></script><script defer src="engine.js?v=60"></script><script defer src="camera.js?v=3"></script><script defer src="player-import.js?v=62"></script><script defer src="player-open.js?v=62"></script></body>');
+  .replace('</body>','<script type="application/json" id="app-data"></script><script defer src="vendor/tf.min.js"></script><script defer src="engine.js?v=60"></script><script defer src="camera.js?v=3"></script><script defer src="player-transfer.js?v=63"></script><script defer src="player-import.js?v=63"></script><script defer src="player-open.js?v=63"></script></body>');
  return html;
 }
 if(require.main===module)fs.writeFileSync(path.join(__dirname,'../docs/play.html'),build());

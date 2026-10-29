@@ -11,16 +11,16 @@ assert.throws(()=>Import.parse(wrap(packet)+wrap(packet)));assert.throws(()=>Imp
 assert.throws(()=>Import.parse(wrap({...packet,classes:[]})));assert.throws(()=>Import.parse(wrap({...packet,blocks:packet.blocks.slice(1)})));
 assert.throws(()=>Import.parse(wrap({...packet,model:{...record,data:'https://evil.test'}})));
 assert.equal(Import.parse('<img src="https://evil.test"><script>throw 1</script>'+wrap(packet)).title,packet.title);
-const page=fs.readFileSync(__dirname+'/../docs/play.html','utf8');assert.equal(page,build());assert(page.includes("connect-src 'none'"));assert(page.includes("script-src 'self' 'unsafe-eval'"));assert(!page.includes('private-photo'));assert(!page.includes(record.data));assert(page.includes('data-web-player="true"'));
+const page=fs.readFileSync(__dirname+'/../docs/play.html','utf8');assert.equal(page,build());assert(page.includes("connect-src 'self'"));assert(page.includes("script-src 'self' 'unsafe-eval'"));assert(!page.includes('private-photo'));assert(!page.includes(record.data));assert(page.includes('data-web-player="true"'));
 const scripts=[...page.matchAll(/<script[^>]+src="([^"]+)"/g)].map(m=>m[1]);assert(scripts.every(src=>!src.includes('://')));assert(!scripts.some(src=>src.startsWith('player.js')));
 (async()=>{
  const elements=new Map();const el=id=>{if(!elements.has(id))elements.set(id,{hidden:true,disabled:false,textContent:'',value:'file',files:[]});return elements.get(id);};
  let appended=0,failScript=false;
- const context={PlayerImport:Import,AIEngine:require('../docs/engine.js'),document:{querySelector:el,createElement(){return{remove(){}};},body:{append(script){appended++;assert.equal(script.src,'player.js?v=62');if(failScript)script.onerror();else script.onload();}}}};
+ const context={PlayerImport:Import,AIEngine:require('../docs/engine.js'),document:{querySelector:el,createElement(){return{remove(){}};},body:{append(script){appended++;assert.equal(script.src,'player.js?v=63');if(failScript)script.onerror();else script.onload();}}}};
  vm.runInNewContext(fs.readFileSync(__dirname+'/../docs/player-open.js','utf8'),context);
  el('#app-file').files=[{size:5,text:async()=>'<html>bad</html>'}];await el('#app-file').onchange();assert.equal(appended,0);assert.equal(el('#open-app').disabled,false);assert(el('#open-status').textContent.includes('완성 앱'));
  el('#app-file').files=[{size:17000000,text:async()=>{throw Error('oversized file must not be read');}}];await el('#app-file').onchange();assert.equal(appended,0);assert(el('#open-status').textContent.includes('16MB'));
  el('#app-file').files=[{size:html.length,text:async()=>html}];failScript=true;await el('#app-file').onchange();assert.equal(el('#open-app').disabled,false);assert(el('#open-status').textContent.includes('연결'));
  failScript=false;await el('#app-file').onchange();assert.equal(el('#open-app-panel').hidden,true);assert.equal(el('#player-main').hidden,false);assert.deepEqual(JSON.parse(el('#app-data').textContent),packet);assert.equal(el('#app-file').value,'');
- console.log('PASS: legacy HTML import preserves learned data; imported HTML/scripts never executed; invalid/oversized files rejected; script failure retry; HTTPS player uses local data and prohibits network connections.');
+ console.log('PASS: legacy HTML import preserves learned data; imported HTML/scripts never executed; invalid/oversized files rejected; script failure retry; HTTPS player uses local data and downloads only fixed public model assets for automatic launch.');
 })().catch(e=>{console.error(e);process.exitCode=1;});

@@ -6,12 +6,12 @@ const read=p=>fs.readFileSync(__dirname+'/../docs/'+p,'utf8');
  const baseModel=JSON.parse(read('model/model.json'));
  const weights=Buffer.concat(baseModel.weightsManifest.flatMap(g=>g.paths.map(p=>fs.readFileSync(__dirname+'/../docs/model/'+p))));
  const base={topology:baseModel.modelTopology,specs:baseModel.weightsManifest.flatMap(g=>g.weights),data:weights.toString('base64')};
- const assets={base,tf:read('vendor/tf.min.js'),engine:read('engine.js'),camera:read('camera.js'),player:read('player.js'),license:read('vendor/LICENSE-Apache-2.0.txt')};
+ const assets={base,tf:read('vendor/tf.min.js'),engine:read('engine.js'),camera:read('camera.js'),transfer:read('player-transfer.js'),player:read('player.js'),license:read('vendor/LICENSE-Apache-2.0.txt')};
  const engine=new Engine(),xs=tf.tensor2d(Array.from({length:6},(_,i)=>Array.from({length:256},(_,j)=>j===i%2?1:0))),ys=tf.tensor2d(Array.from({length:6},(_,i)=>i%2?[0,1]:[1,0]));
  const head=await engine.train(xs,ys); let m; await head.save(tf.io.withSaveHandler(async a=>{m=a;return{modelArtifactsInfo:{dateSaved:new Date(),modelTopologyType:'JSON'}};}));
  const project={title:'시험 </script><script>throw 1</script>',revision:1,trainedRevision:1,classes:[{name:'A <b>',photos:['private-photo']},{name:'B',photos:['private-photo2']}],blocks:[{type:'photo'},{type:'predict'},{type:'if',classIndex:1,icon:'♻️',message:'B 안내'},{type:'if',classIndex:0,icon:'🌱',message:'A </script> 안내'}],model:{topology:m.modelTopology,specs:m.weightSpecs,data:Buffer.from(m.weightData).toString('base64')},history:['private-history']};
  const html=Export.build(project,assets),scripts=[...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)];
- assert.equal(scripts.length,5);assert(!/<script[^>]+src=/.test(html));assert(!html.includes('private-photo'));assert(!html.includes('private-history'));assert(html.includes("connect-src 'none'"));assert(html.includes('id="camera-open"'));assert(html.includes('갤러리에서 고르기'));assert(html.includes('capture="environment"'));assert(html.includes('class InlineCamera'));
+ assert.equal(scripts.length,6);assert(!/<script[^>]+src=/.test(html));assert(!html.includes('private-photo'));assert(!html.includes('private-history'));assert(html.includes("connect-src 'none'"));assert(html.includes('id="camera-open"'));assert(html.includes('갤러리에서 고르기'));assert(html.includes('capture="environment"'));assert(html.includes('class InlineCamera'));
  const packet=require('../docs/player-import.js').parse(html);assert.deepEqual(packet,JSON.parse(scripts[0][1]));assert.deepEqual(packet.model,project.model);assert.deepEqual(packet.blocks,project.blocks);assert.equal(packet.title,project.title);assert.equal(packet.classes[0].count,1);scripts.slice(1).forEach(s=>new vm.Script(s[1]));
  const elements=new Map();const el=id=>{if(!elements.has(id))elements.set(id,{textContent:'',hidden:true,disabled:false,open:false,showModal(){this.open=true;},close(){this.open=false;this.onclose?.();}});return elements.get(id);};el('#app-data').textContent=JSON.stringify(packet);
  let capture='A',cameraError=null,cameraStops=0;const listeners={};
@@ -34,6 +34,10 @@ const read=p=>fs.readFileSync(__dirname+'/../docs/'+p,'utf8');
  context.document.documentElement={dataset:{webPlayer:'true'}};context.navigator.mediaDevices={getUserMedia(){}};
  cameraError=Object.assign(Error('denied'),{name:'NotAllowedError'});await el('#camera-open').onclick();assert(el('#status').textContent.includes('NotAllowedError'));assert(!el('#status').textContent.includes('카메라 앱으로'));
  cameraError=null;capture='A';await el('#camera-open').onclick();el('#camera-capture').onclick();await el('#start').onclick();assert.equal(el('#class-name').textContent,'A <b>');
+
+ // A standalone camera click transfers the trained app before requesting local camera access.
+ let launched='';context.document.documentElement={dataset:{}};context.location={assign(url){launched=url;}};context.PlayerTransfer=require('../docs/player-transfer.js');
+ await el('#camera-open').onclick();assert(launched.startsWith('https://hyodur.github.io/little-ai-lab-classroom/play.html#camera='));const carried=context.PlayerTransfer.decode(new URL(launched).hash);assert.deepEqual(carried.model,packet.model);assert.deepEqual(carried.blocks,packet.blocks);assert.equal(carried.base,undefined);assert.equal(el('#camera-dialog').open,false);delete context.location;
 
  // A corrupt embedded head must show recovery guidance, never a class-A answer.
  const brokenPacket=structuredClone(packet);brokenPacket.model.data=Buffer.alloc(2056).toString('base64');el('#app-data').textContent=JSON.stringify(brokenPacket);

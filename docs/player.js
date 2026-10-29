@@ -51,6 +51,11 @@ function cameraHelp(error){
 }
 $('#camera-open').onclick=async()=>{
  if(working)return;
+ if(document.documentElement?.dataset.webPlayer!=='true'&&typeof location!=='undefined'){
+  try{status('작품을 가지고 웹 촬영 화면으로 이동해요…');location.assign('https://hyodur.github.io/little-ai-lab-classroom/play.html'+PlayerTransfer.encode(packet));}
+  catch(e){status(e.message||'웹 촬영 화면을 열지 못했어요. 아래 링크를 이용해 주세요.');$('#camera-fallback').hidden=false;}
+  return;
+ }
  if(!navigator.mediaDevices?.getUserMedia||typeof dialog.showModal!=='function'){status(cameraHelp());$('#camera-fallback').hidden=false;return;}
  const turn=++cameraTurn;lock(true);$('#camera-capture').disabled=true;$('#camera-status').textContent='카메라 사용을 허용하고, 화면이 보일 때까지 기다려 주세요.';
  try{dialog.showModal();if(await camera.open()&&turn===cameraTurn&&dialog.open){$('#camera-capture').disabled=false;$('#camera-status').textContent='물건을 화면에 맞추고 ‘찍어서 사용’을 눌러요.';}}
