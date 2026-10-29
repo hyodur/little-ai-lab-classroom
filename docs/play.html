@@ -1,0 +1,204 @@
+<!doctype html><html lang="ko" data-web-player="true"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#196653"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-eval'; style-src 'unsafe-inline'; img-src data: blob:; media-src blob:; connect-src 'none'; base-uri 'none'; form-action 'none'"><title>완성 앱 실행하기</title>
+<style>*{box-sizing:border-box}body{margin:0;background:#f4f5ed;color:#203e36;font-family:system-ui,'Malgun Gothic',sans-serif;line-height:1.6}main{max-width:660px;margin:auto;padding:24px 18px 48px}header{margin:12px 0 24px}.eyebrow{font-size:13px;letter-spacing:1px;color:#577569}h1{font-size:clamp(25px,6vw,36px);line-height:1.3;overflow-wrap:anywhere;margin:8px 0}p{margin:10px 0}.card{border:1px solid #dbe4d8;background:white;border-radius:26px;padding:24px;box-shadow:0 12px 35px #2446380a}.photo{background:#edf2e8;border-radius:18px;min-height:220px;display:grid;place-items:center;text-align:center;overflow:hidden}.photo img{width:100%;height:280px;object-fit:contain}.symbol{font-size:50px}.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}button{font:inherit;font-weight:700;border:1px solid #c9d8cc;border-radius:14px;padding:13px 16px;min-height:52px;background:#f4f7f0;color:#244c3c;cursor:pointer;touch-action:manipulation}button:focus-visible{outline:3px solid #d99513;outline-offset:3px}button:disabled{opacity:.5;cursor:default}#start{background:#196653;color:white;border-color:#196653;width:100%;font-size:20px}#status{min-height:52px;color:#4c685c;font-size:15px}#answer{background:#eff6eb;border:1px solid #cee0c7;border-radius:18px;padding:20px;text-align:center}#class-name{display:block;font-size:27px;overflow-wrap:anywhere}#message{font-size:24px;font-weight:700;overflow-wrap:anywhere}#icon{display:block;font-size:40px}.small{font-size:13px;color:#5b7166}details{margin-top:18px}summary{cursor:pointer}pre{white-space:pre-wrap;word-break:break-word;font-size:11px}dialog{border:0;border-radius:20px;max-width:540px;width:92%;padding:18px}dialog::backdrop{background:#122d25bb}video{width:100%;max-height:55vh;background:#142c23;border-radius:12px}dialog .actions{justify-content:space-between}[hidden]{display:none!important}@media(max-width:390px){main{padding:16px 10px}.card{padding:16px}.actions button{flex:1}}</style></head><body><main id="open-app-panel"><header><div class="eyebrow">꼬마 AI 개발 연구소 · v0.6.2</div><h1>완성 앱을 열어요</h1><p>친구가 만든 앱으로 바로 찍고 시험해요.</p></header><section class="card"><div class="symbol" aria-hidden="true">📂</div><h2>받아 둔 HTML 파일을 골라요</h2><p>카카오톡에서 받은 파일은 먼저 다운로드해 주세요.</p><button id="open-app">완성 앱 HTML 고르기</button><input id="app-file" type="file" accept=".html,.htm,text/html" hidden><p id="open-status" role="status" aria-live="polite">파일을 고르면 촬영과 시험 화면이 열려요.</p><p class="small">작품과 시험 사진은 이 기기에서만 읽어요. 서버에 업로드하지 않아요. 다시 학습할 필요도 없어요.</p></section><p class="small">카메라 사용 안내가 나오면 허용해 주세요.</p><p><a href="./">← 개발 연구소로</a></p></main><main id="player-main" hidden><header><div class="eyebrow">꼬마 AI 개발 연구소 · 친구가 만든 앱</div><h1 id="app-title">완성 앱 실행하기</h1><p>사진을 보고, AI의 생각을 확인해요.</p></header><section class="card"><div class="photo"><div id="placeholder"><span class="symbol">📷</span><p>어떤 물건일까?</p></div><img id="preview" alt="지금 시험할 사진" hidden></div><div class="actions"><button id="camera-open">📷 바로 사진 찍기</button><button id="choose">🖼 갤러리에서 고르기</button><input id="photo" type="file" accept="image/*" hidden><button id="start" disabled>▶ 시작</button></div><p class="small">바로 찍거나 갤러리에서 고른 뒤, 시작을 눌러요.</p><div id="camera-fallback" hidden><p class="small">주소창의 사이트 설정과 휴대폰 설정에서 이 브라우저의 카메라 권한을 확인해 주세요. 당장 촬영이 어렵다면 휴대폰 기본 카메라에서 따로 찍어 저장한 다음 ‘갤러리에서 고르기’를 이용해요.</p><div hidden><p><a href="https://hyodur.github.io/little-ai-lab-classroom/play.html" target="_blank" rel="noopener">웹에서 완성 앱 열기 ↗</a></p><p class="small">위 화면에서 이 HTML 파일을 골라 주세요. 파일을 서버에 올리지 않고 촬영과 시험을 할 수 있어요.</p><p class="small">카메라 사용이 어려우면 기기의 카메라 앱으로 찍어 보세요. 파일을 여는 앱에 따라 촬영을 지원하지 않을 수 있어요.</p><button id="native-open">📷 카메라 앱으로 찍기</button><input id="native-photo" type="file" accept="image/*" capture="environment" hidden></div></div><p id="status" role="status" aria-live="polite">앱을 준비하고 있어요…</p><noscript><p>이 화면에서는 앱을 실행할 수 없어요. 파일 미리보기가 아닌 JavaScript를 실행하는 웹브라우저로 열어 주세요.</p></noscript><section id="answer" aria-live="polite" hidden><span>AI가 고른 종류</span><strong id="class-name"></strong><hr><span id="icon" aria-hidden="true"></span><p id="message"></p><small>만든 친구가 블록으로 연결한 안내예요.</small></section></section><details><summary>이 앱은 어떻게 배웠을까?</summary><p id="learned"></p><p class="small">사진의 모습을 배우고 두 종류 중 하나를 골라요. 처음 보는 물건도 둘 중 하나로 고르므로 틀릴 수 있어요. 사진 수만으로 AI가 잘 배웠는지 알 수는 없어요. 같은 시험 사진을 여러 앱에 넣고 비교해 봐요.</p><p class="small">AI와 안내 블록이 이 파일에 들어 있어요. 원래 학습 사진은 들어 있지 않아요. 시험 사진은 서버에 보내거나 파일에 저장하지 않아요. 앱을 고치려면 연구소에서 수정용 JSON을 열어 주세요.</p></details><details><summary>소프트웨어 이용 안내</summary><p class="small">TensorFlow.js / MobileNet · Apache License 2.0</p><pre>
+                                 Apache License
+                           Version 2.0, January 2004
+                        http://www.apache.org/licenses/
+
+   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
+
+   1. Definitions.
+
+      &quot;License&quot; shall mean the terms and conditions for use, reproduction,
+      and distribution as defined by Sections 1 through 9 of this document.
+
+      &quot;Licensor&quot; shall mean the copyright owner or entity authorized by
+      the copyright owner that is granting the License.
+
+      &quot;Legal Entity&quot; shall mean the union of the acting entity and all
+      other entities that control, are controlled by, or are under common
+      control with that entity. For the purposes of this definition,
+      &quot;control&quot; means (i) the power, direct or indirect, to cause the
+      direction or management of such entity, whether by contract or
+      otherwise, or (ii) ownership of fifty percent (50%) or more of the
+      outstanding shares, or (iii) beneficial ownership of such entity.
+
+      &quot;You&quot; (or &quot;Your&quot;) shall mean an individual or Legal Entity
+      exercising permissions granted by this License.
+
+      &quot;Source&quot; form shall mean the preferred form for making modifications,
+      including but not limited to software source code, documentation
+      source, and configuration files.
+
+      &quot;Object&quot; form shall mean any form resulting from mechanical
+      transformation or translation of a Source form, including but
+      not limited to compiled object code, generated documentation,
+      and conversions to other media types.
+
+      &quot;Work&quot; shall mean the work of authorship, whether in Source or
+      Object form, made available under the License, as indicated by a
+      copyright notice that is included in or attached to the work
+      (an example is provided in the Appendix below).
+
+      &quot;Derivative Works&quot; shall mean any work, whether in Source or Object
+      form, that is based on (or derived from) the Work and for which the
+      editorial revisions, annotations, elaborations, or other modifications
+      represent, as a whole, an original work of authorship. For the purposes
+      of this License, Derivative Works shall not include works that remain
+      separable from, or merely link (or bind by name) to the interfaces of,
+      the Work and Derivative Works thereof.
+
+      &quot;Contribution&quot; shall mean any work of authorship, including
+      the original version of the Work and any modifications or additions
+      to that Work or Derivative Works thereof, that is intentionally
+      submitted to Licensor for inclusion in the Work by the copyright owner
+      or by an individual or Legal Entity authorized to submit on behalf of
+      the copyright owner. For the purposes of this definition, &quot;submitted&quot;
+      means any form of electronic, verbal, or written communication sent
+      to the Licensor or its representatives, including but not limited to
+      communication on electronic mailing lists, source code control systems,
+      and issue tracking systems that are managed by, or on behalf of, the
+      Licensor for the purpose of discussing and improving the Work, but
+      excluding communication that is conspicuously marked or otherwise
+      designated in writing by the copyright owner as &quot;Not a Contribution.&quot;
+
+      &quot;Contributor&quot; shall mean Licensor and any individual or Legal Entity
+      on behalf of whom a Contribution has been received by Licensor and
+      subsequently incorporated within the Work.
+
+   2. Grant of Copyright License. Subject to the terms and conditions of
+      this License, each Contributor hereby grants to You a perpetual,
+      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+      copyright license to reproduce, prepare Derivative Works of,
+      publicly display, publicly perform, sublicense, and distribute the
+      Work and such Derivative Works in Source or Object form.
+
+   3. Grant of Patent License. Subject to the terms and conditions of
+      this License, each Contributor hereby grants to You a perpetual,
+      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+      (except as stated in this section) patent license to make, have made,
+      use, offer to sell, sell, import, and otherwise transfer the Work,
+      where such license applies only to those patent claims licensable
+      by such Contributor that are necessarily infringed by their
+      Contribution(s) alone or by combination of their Contribution(s)
+      with the Work to which such Contribution(s) was submitted. If You
+      institute patent litigation against any entity (including a
+      cross-claim or counterclaim in a lawsuit) alleging that the Work
+      or a Contribution incorporated within the Work constitutes direct
+      or contributory patent infringement, then any patent licenses
+      granted to You under this License for that Work shall terminate
+      as of the date such litigation is filed.
+
+   4. Redistribution. You may reproduce and distribute copies of the
+      Work or Derivative Works thereof in any medium, with or without
+      modifications, and in Source or Object form, provided that You
+      meet the following conditions:
+
+      (a) You must give any other recipients of the Work or
+          Derivative Works a copy of this License; and
+
+      (b) You must cause any modified files to carry prominent notices
+          stating that You changed the files; and
+
+      (c) You must retain, in the Source form of any Derivative Works
+          that You distribute, all copyright, patent, trademark, and
+          attribution notices from the Source form of the Work,
+          excluding those notices that do not pertain to any part of
+          the Derivative Works; and
+
+      (d) If the Work includes a &quot;NOTICE&quot; text file as part of its
+          distribution, then any Derivative Works that You distribute must
+          include a readable copy of the attribution notices contained
+          within such NOTICE file, excluding those notices that do not
+          pertain to any part of the Derivative Works, in at least one
+          of the following places: within a NOTICE text file distributed
+          as part of the Derivative Works; within the Source form or
+          documentation, if provided along with the Derivative Works; or,
+          within a display generated by the Derivative Works, if and
+          wherever such third-party notices normally appear. The contents
+          of the NOTICE file are for informational purposes only and
+          do not modify the License. You may add Your own attribution
+          notices within Derivative Works that You distribute, alongside
+          or as an addendum to the NOTICE text from the Work, provided
+          that such additional attribution notices cannot be construed
+          as modifying the License.
+
+      You may add Your own copyright statement to Your modifications and
+      may provide additional or different license terms and conditions
+      for use, reproduction, or distribution of Your modifications, or
+      for any such Derivative Works as a whole, provided Your use,
+      reproduction, and distribution of the Work otherwise complies with
+      the conditions stated in this License.
+
+   5. Submission of Contributions. Unless You explicitly state otherwise,
+      any Contribution intentionally submitted for inclusion in the Work
+      by You to the Licensor shall be under the terms and conditions of
+      this License, without any additional terms or conditions.
+      Notwithstanding the above, nothing herein shall supersede or modify
+      the terms of any separate license agreement you may have executed
+      with Licensor regarding such Contributions.
+
+   6. Trademarks. This License does not grant permission to use the trade
+      names, trademarks, service marks, or product names of the Licensor,
+      except as required for reasonable and customary use in describing the
+      origin of the Work and reproducing the content of the NOTICE file.
+
+   7. Disclaimer of Warranty. Unless required by applicable law or
+      agreed to in writing, Licensor provides the Work (and each
+      Contributor provides its Contributions) on an &quot;AS IS&quot; BASIS,
+      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+      implied, including, without limitation, any warranties or conditions
+      of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A
+      PARTICULAR PURPOSE. You are solely responsible for determining the
+      appropriateness of using or redistributing the Work and assume any
+      risks associated with Your exercise of permissions under this License.
+
+   8. Limitation of Liability. In no event and under no legal theory,
+      whether in tort (including negligence), contract, or otherwise,
+      unless required by applicable law (such as deliberate and grossly
+      negligent acts) or agreed to in writing, shall any Contributor be
+      liable to You for damages, including any direct, indirect, special,
+      incidental, or consequential damages of any character arising as a
+      result of this License or out of the use or inability to use the
+      Work (including but not limited to damages for loss of goodwill,
+      work stoppage, computer failure or malfunction, or any and all
+      other commercial damages or losses), even if such Contributor
+      has been advised of the possibility of such damages.
+
+   9. Accepting Warranty or Additional Liability. While redistributing
+      the Work or Derivative Works thereof, You may choose to offer,
+      and charge a fee for, acceptance of support, warranty, indemnity,
+      or other liability obligations and/or rights consistent with this
+      License. However, in accepting such obligations, You may act only
+      on Your own behalf and on Your sole responsibility, not on behalf
+      of any other Contributor, and only if You agree to indemnify,
+      defend, and hold each Contributor harmless for any liability
+      incurred by, or claims asserted against, such Contributor by reason
+      of your accepting any such warranty or additional liability.
+
+   END OF TERMS AND CONDITIONS
+
+   APPENDIX: How to apply the Apache License to your work.
+
+      To apply the Apache License to your work, attach the following
+      boilerplate notice, with the fields enclosed by brackets &quot;[]&quot;
+      replaced with your own identifying information. (Don&#39;t include
+      the brackets!)  The text should be enclosed in the appropriate
+      comment syntax for the file format. We also recommend that a
+      file or class name and description of purpose be included on the
+      same &quot;printed page&quot; as the copyright notice for easier
+      identification within third-party archives.
+
+   Copyright [yyyy] [name of copyright owner]
+
+   Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+</pre></details><p><a href="play.html">다른 완성 앱 열기</a> · <a href="./">개발 연구소로</a></p></main><dialog id="camera-dialog" aria-labelledby="camera-title"><h2 id="camera-title">물건 사진 찍기</h2><video id="camera-video" autoplay muted playsinline></video><p id="camera-status" role="status" aria-live="polite"></p><div class="actions"><button id="camera-close">닫기 ×</button><button id="camera-capture" disabled>📷 찍어서 사용</button></div><p class="small">얼굴 대신 물건을 찍어요. 촬영하거나 닫으면 카메라가 꺼져요.</p></dialog><script type="application/json" id="app-data"></script><script defer src="vendor/tf.min.js"></script><script defer src="engine.js?v=60"></script><script defer src="camera.js?v=3"></script><script defer src="player-import.js?v=62"></script><script defer src="player-open.js?v=62"></script></body></html>

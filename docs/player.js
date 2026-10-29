@@ -20,7 +20,7 @@ async function models(){
 }
 async function image(src){const im=new Image();im.src=src;await im.decode();return im;}
 async function smallPhoto(file){
- if(file.size>20000000)throw Error('사진은 20MB보다 작아야 해요.');if(!file.type.startsWith('image/'))throw Error('사진 파일을 골라 주세요.');
+ if(!file.size)throw Error('촬영한 사진이 전달되지 않았어요. 갤러리 사진을 골라 주세요.');if(file.size>20000000)throw Error('사진은 20MB보다 작아야 해요.');if(file.type&&!file.type.startsWith('image/')&&file.type!=='application/octet-stream')throw Error('사진 파일을 골라 주세요.');
  let im=null,url=null,canvas=null;
  try{
   if(typeof createImageBitmap==='function'){try{im=await createImageBitmap(file,{resizeWidth:320,resizeQuality:'medium'});}catch{}}
@@ -31,16 +31,23 @@ async function smallPhoto(file){
 }
 function accept(src){photo=src;$('#preview').src=src;$('#preview').hidden=false;$('#placeholder').hidden=true;clear();$('#start').disabled=false;status('사진을 골랐어요. 시작을 눌러 주세요.');}
 $('#choose').onclick=()=>{if(!working)$('#photo').click();};
-$('#photo').onchange=async e=>{const file=e.target.files[0];e.target.value='';if(!file||working)return;lock(true);clear();status('사진을 준비하고 있어요…');try{accept(await smallPhoto(file));}catch(e){status(e.message||'사진을 열지 못했어요. JPG나 PNG 사진을 골라 주세요.');}finally{lock(false);}};
+$('#photo').onchange=async e=>{const file=e.target.files[0];if(!file||working)return;lock(true);clear();status('사진을 준비하고 있어요…');try{accept(await smallPhoto(file));}catch(e){status(e.message||'사진을 열지 못했어요. JPG나 PNG 사진을 골라 주세요.');}finally{e.target.value='';lock(false);}};
 $('#native-photo').onchange=$('#photo').onchange;
 $('#native-open').onclick=()=>{if(!working)$('#native-photo').click();};
 const camera=new InlineCamera($('#camera-video')),dialog=$('#camera-dialog');
 let cameraTurn=0;
 function closeCamera(){cameraTurn++;camera.stop();$('#camera-capture').disabled=true;if(dialog.open)dialog.close();}
 function cameraHelp(error){
+ if(document.documentElement?.dataset.webPlayer==='true'){
+  const code=error?.name||'MediaDevicesUnavailable';
+  if(code==='NotAllowedError'||code==='SecurityError')return '카메라 권한이 차단됐어요. 사이트 설정과 휴대폰 설정에서 이 브라우저의 카메라를 허용해 주세요. ('+code+')';
+  if(code==='NotReadableError')return '카메라를 사용 중인 다른 앱을 닫고 다시 눌러 주세요. ('+code+')';
+  if(code==='NotFoundError')return '사용할 카메라를 찾지 못했어요. 갤러리 사진으로 시험할 수 있어요. ('+code+')';
+  return '카메라를 열지 못했어요. 아래 권한 안내를 확인해 주세요. ('+code+')';
+ }
  if(error?.name==='NotAllowedError'||error?.name==='SecurityError')return '카메라를 열 수 없어요. 브라우저의 카메라 권한을 확인하거나, 아래 ‘카메라 앱으로 찍기’를 눌러 주세요.';
  if(error?.name==='NotFoundError')return '사용할 카메라를 찾지 못했어요. 사진을 골라 시험할 수 있어요.';
- return '이 화면에서는 카메라를 열지 못했어요. 아래 ‘카메라 앱으로 찍기’를 눌러 보거나, Chrome·삼성 인터넷에서 파일을 다시 열어 주세요.';
+ return '이 화면에서는 카메라를 열지 못했어요. 아래 ‘웹에서 완성 앱 열기’에서 이 HTML 파일을 골라 주세요. 카메라 앱으로 찍기 대신 웹 화면 안에서 촬영할 수 있어요.';
 }
 $('#camera-open').onclick=async()=>{
  if(working)return;

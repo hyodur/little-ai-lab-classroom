@@ -1,16 +1,19 @@
 {
   "files": {
     "style.css": "4a53929792bc5a2ff0d162265475dc829a772a7a1a5a1fc1d5f18a858e0e82d9",
-    "export-html.js": "e11ddac07444fb1f0ac16d841a74ee54a7612d84219fde3f9c798decb67b7ca6",
+    "export-html.js": "5e82091f304aa44bffdc30050e880b89b19cb069bf13ade7ab0ed3a04260a958",
     "app.js": "b67b5e5db59da045916dd5c0aa2358d4413b89f6a453b23a8aa7bd7e02289bba",
     "engine.js": "69da5e937e6d1cbe754a4b0bdc3cbda3edebe720f254065c6c93c432e54473ef",
     "camera.js": "2fef92c1d10eeb35ce1adf939dbd7fd175fdd315d66712ed3e35fdd70d344aa3",
-    "player.js": "5f2c342e4c319216f41287a9532d85ce12097f37b72e19afb8e02e2f165de807",
+    "player.js": "f6851cc70dc5c6b642c236558c43362a5a0409efc5ca94e6837b0c9b24e23921",
     "persistence.js": "445ac0f72baa5a484141c02cea25ccbc69ed9b2926956d76e1425b9cb4ade994",
-    "index.html": "648bca2e6d9390d1b8bd160318a8227824ea27f4fa741a596deade6a4a57bedd",
+    "index.html": "c8664189390c0c70fb0dcf033c814fa462bc4196a6c67917bd63e719575d82d7",
     "model/weights.bin": "eb49857447f6089e7e392f7991f3f4fdce1936efaf83d535f5eb8aaba9538e0b",
     "model/model.json": "3611231bca9ff81c1d1dd7b8a5f3311829f0cb84af37e441ddb7482f8f2f0a23",
     "vendor/LICENSE-Apache-2.0.txt": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
-    "vendor/tf.min.js": "300dfae273d20b4046f46a06d735688f03675a807561e9bcb5f664eb2f3d2831"
+    "vendor/tf.min.js": "300dfae273d20b4046f46a06d735688f03675a807561e9bcb5f664eb2f3d2831",
+    "play.html": "b37e9a35e453dea3c8aa6ca938a6a76552b2bbe474cfa97e8d49702f5ec4ad21",
+    "player-import.js": "c29bb8e115017f631494112b325cd6ba652ac15f503a5bd86ac90ae842827c43",
+    "player-open.js": "c8a7677b7495b5bf6bc11eea25b12ce2d2f9f024c321b3997f03e902b21e1c36"
   }
 }
